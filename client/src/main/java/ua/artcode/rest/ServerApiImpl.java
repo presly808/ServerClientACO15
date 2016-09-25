@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import ua.artcode.client.utils.IOUtils;
+import ua.artcode.utils.PropertiesHolder;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class ServerApiImpl implements ServerApi {
 
-    public static final String BASE_URL = "http://localhost:8080";
+    public static final String BASE_URL = PropertiesHolder.get("base.url");
 
     @Override
     public String login(String login, String pass) {

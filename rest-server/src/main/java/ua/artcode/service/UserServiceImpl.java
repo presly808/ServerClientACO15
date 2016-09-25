@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by serhii on 9/24/16.
@@ -22,25 +24,28 @@ public class UserServiceImpl implements UserService {
 
     private Map<Long, Product> productMap;
     private Map<String, User> userMap;
-    private long count;
+    private AtomicLong count;
     private Map<String, User> sessionMap;
 
     public UserServiceImpl() {
-        productMap = new HashMap<>();
+
+        count = new AtomicLong(0);
+
+        productMap = new ConcurrentHashMap<>();
         productMap.put(-1L, new Product(-1, "Samsung", 400));
         productMap.put(-2L, new Product(-1, "Samsung", 400));
 
-        sessionMap = new HashMap<>();
+        sessionMap = new ConcurrentHashMap<>();
 
-        userMap = new HashMap<>();
+        userMap = new ConcurrentHashMap<>();
         userMap.put("admin", new User(1,"admin", SecurityUtils.hash("admin")));
     }
 
     @Override
     public Product addProduct(Product product) {
-        product.setId(count);
-        productMap.put(count, product);
-        count++;
+        product.setId(count.get());
+        productMap.put(count.get(), product);
+        count.incrementAndGet();
         return product;
     }
 
